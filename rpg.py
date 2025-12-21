@@ -1,6 +1,19 @@
 import time
 import random
 
+#--- Funções ---
+def caminhada():
+    if random.randint(1,3) == 1:
+        print("Caminhando....")
+        time.sleep(30)
+    elif random.randint(1,3) == 2:
+        print("Caminhando...")
+        time.sleep(20)
+    else:
+        print("Caminhando...")
+        time.sleep(15)
+
+
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
         self.nome = nome
@@ -9,6 +22,7 @@ class Personagem:
         self.defesa = defesa
         self.ferido = False
         self.rage = False
+        self.inventario = []
 
     def __str__(self):
         return self.nome
@@ -45,11 +59,13 @@ class Personagem:
             cura_total = 15
             print(f"{self.nome} curou {cura_total} de vida!")
         self.vida = min(100, self.vida + cura_total)
-    def item_panela(self):
+    def item_panela(self,item):
+        self.inventario.append(item)
         self.vida += self.vida * 0.30
         self.ataque -= self.ataque * 0.20
 
-    def item_faca(self):
+    def item_faca(self,item):
+        self.inventario.append(item)
         if not self.rage:
             self.ataque += self.ataque * 0.40
             self.rage = True
@@ -72,31 +88,26 @@ ataque_prota = float(input("Ataque (menor que 100): "))
 while ataque_prota >= 100:
     ataque_prota = float(input("Valor inválido. Ataque menor que 100: "))
 
-
-prota = Personagem(nome_prota, 100, ataque_prota, 100)
+#prota = Personagem(nome_prota, 100, ataque_prota, 100)
+#--- mini cheat
+if nome_prota == "petrakiiopy":
+    prota = Personagem(nome_prota,10000,9999.9,10000)
+else:
+    prota = Personagem(nome_prota, 100, ataque_prota, 100)
 # --- Sistema de itens ---#
 if opcão_obj == 1:
-    print("Sorteando seu item!")
+    print("Sorteando seu item!\n")
     time.sleep(0.2)
     if item == 'Panela':
-        print("O item escolhido foi a panela!!\n A panela te dá 30% de buff de vida!!")
-        prota.item_panela()
+        print("O item escolhido foi a panela!!\n A panela te dá 30% de buff de vida!!\n")
+        prota.item_panela(item)
         print("Sua vida é:",prota.vida)
     elif item == 'Faca':
-        print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque")
-        prota.item_faca()
+        print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque!!\n")
+        prota.item_faca(item)
         print("Seu ataque atual:",prota.ataque)
     else:
         pass
-
-
-#     ataque_prota = float(input("Ataque (menor que 100): "))
-#     if ataque_prota >= 100 or ataque_prota >= 99.9:
-#         print("Valor inválido. Ataque deve ser menor que 100.")
-#     else:
-#         break
-
-# prota = Personagem(nome_prota, 100, ataque_prota, 100)
 
 # --- Inimigos ---
 demiurgo = Personagem("Demiurgo", 100, 80, 80)
@@ -104,6 +115,7 @@ goblin = Personagem("Goblin", 70, 30, 80)
 escorpiao = Personagem("Escorpião", 100, 20, 80)
 vampiro = Personagem("Vampiro", 1000, 45, 20)
 gorgona = Personagem("Górgona", 100, 25, 90)
+
 
 inimigo = random.choice([demiurgo, goblin, escorpiao, vampiro, gorgona])
 
@@ -121,7 +133,7 @@ print(f"Status\nNome → {inimigo.nome}\nVida → {inimigo.vida}\nAtaque → {in
 # --- Loop principal da batalha ---
 while True:
     print("\n--- Sua vez ---")
-    acao = input("Atacar, Curar, Fugir ou Poupar? (1 para status): ").lower()
+    acao = input("Atacar, Curar, Fugir ou Poupar? (1 para status,2 pra inventario): ").lower()
 
     if acao == "atacar":
         prota.atacar(inimigo)
@@ -144,6 +156,8 @@ while True:
         prota.status()
         inimigo.status()
         continue
+    elif acao == "2":
+        print("Itens:",*prota.inventario)
     else:
         print("Ação inválida.")
         continue
@@ -182,4 +196,11 @@ while True:
     prota.status()
     inimigo.status()
 
-    # pode relatar os erros?
+#--- Escolha de campanha --- 
+print(f"você saiu vitorio {prota.nome}\n Quer continuar sua jornada?\n")
+resposta_jornada = int(input("1-Sim or 2-Não"))
+if resposta_jornada == 1:
+    pass
+else:
+    print("Você foi um bom guerreiro")
+
