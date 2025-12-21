@@ -8,6 +8,7 @@ class Personagem:
         self.ataque = ataque
         self.defesa = defesa
         self.ferido = False
+        self.rage = False
 
     def __str__(self):
         return self.nome
@@ -44,6 +45,14 @@ class Personagem:
             cura_total = 15
             print(f"{self.nome} curou {cura_total} de vida!")
         self.vida = min(100, self.vida + cura_total)
+    def item_panela(self):
+        self.vida += self.vida * 0.30
+        self.ataque -= self.ataque * 0.20
+
+    def item_faca(self):
+        if not self.rage:
+            self.ataque += self.ataque * 0.40
+            self.rage = True
 
     def status(self):
         print(f"{self.nome} → Vida: {self.vida:.0f} | Ataque: {self.ataque} | Defesa: {self.defesa}")
@@ -51,18 +60,43 @@ class Personagem:
     def morto(self):
         return self.vida <= 0
 
-
+# --- Itens ---
+itens = ['Panela','Faca']
+item = random.choice(itens)
 # --- Criação do jogador ---
 nome_prota = input("Nome do seu personagem: ")
+opcão_obj = int(input("Quer um Item Aleatorio?(Isso custa 20% do seu ataque)\n 1-Sim ou 2-Não:"))
+ataque_prota = float(input("Ataque (menor que 100): "))
 
-while True:
-    ataque_prota = float(input("Ataque (menor que 100): "))
-    if ataque_prota >= 100 or ataque_prota >= 99.9:
-        print("Valor inválido. Ataque deve ser menor que 100.")
-    else:
-        break
+# --- Verificação de Ataque
+while ataque_prota >= 100:
+    ataque_prota = float(input("Valor inválido. Ataque menor que 100: "))
+
 
 prota = Personagem(nome_prota, 100, ataque_prota, 100)
+# --- Sistema de itens ---#
+if opcão_obj == 1:
+    print("Sorteando seu item!")
+    time.sleep(0.2)
+    if item == 'Panela':
+        print("O item escolhido foi a panela!!\n A panela te dá 30% de buff de vida!!")
+        prota.item_panela()
+        print("Sua vida é:",prota.vida)
+    elif item == 'Faca':
+        print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque")
+        prota.item_faca()
+        print("Seu ataque atual:",prota.ataque)
+    else:
+        pass
+
+
+#     ataque_prota = float(input("Ataque (menor que 100): "))
+#     if ataque_prota >= 100 or ataque_prota >= 99.9:
+#         print("Valor inválido. Ataque deve ser menor que 100.")
+#     else:
+#         break
+
+# prota = Personagem(nome_prota, 100, ataque_prota, 100)
 
 # --- Inimigos ---
 demiurgo = Personagem("Demiurgo", 100, 80, 80)
@@ -147,3 +181,5 @@ while True:
     print("\nStatus:")
     prota.status()
     inimigo.status()
+
+    # pode relatar os erros?
