@@ -1,4 +1,5 @@
 import time
+import random
 
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
