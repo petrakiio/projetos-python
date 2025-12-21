@@ -181,5 +181,3 @@ while True:
     print("\nStatus:")
     prota.status()
     inimigo.status()
-
-    # pode relatar os erros?
