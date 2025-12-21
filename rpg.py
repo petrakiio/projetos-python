@@ -1,6 +1,7 @@
 import time
 import random
 
+<<<<<<< HEAD
 #--- Funções ---
 def caminhada():
     if random.randint(1,3) == 1:
@@ -14,6 +15,8 @@ def caminhada():
         time.sleep(15)
 
 
+=======
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
         self.nome = nome
@@ -22,7 +25,10 @@ class Personagem:
         self.defesa = defesa
         self.ferido = False
         self.rage = False
+<<<<<<< HEAD
         self.inventario = []
+=======
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
 
     def __str__(self):
         return self.nome
@@ -59,6 +65,7 @@ class Personagem:
             cura_total = 15
             print(f"{self.nome} curou {cura_total} de vida!")
         self.vida = min(100, self.vida + cura_total)
+<<<<<<< HEAD
     def item_panela(self,item):
         self.inventario.append(item)
         self.vida += self.vida * 0.30
@@ -66,6 +73,13 @@ class Personagem:
 
     def item_faca(self,item):
         self.inventario.append(item)
+=======
+    def item_panela(self):
+        self.vida += self.vida * 0.30
+        self.ataque -= self.ataque * 0.20
+
+    def item_faca(self):
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
         if not self.rage:
             self.ataque += self.ataque * 0.40
             self.rage = True
@@ -88,6 +102,7 @@ ataque_prota = float(input("Ataque (menor que 100): "))
 while ataque_prota >= 100:
     ataque_prota = float(input("Valor inválido. Ataque menor que 100: "))
 
+<<<<<<< HEAD
 #--- mini cheat
 if nome_prota == "petrakiiopy":
     prota = Personagem(nome_prota,10000,9999.9,10000)
@@ -105,10 +120,37 @@ if opcão_obj == 1:
     elif item == 'Faca':
         print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque!!\n")
         prota.item_faca(item)
+=======
+
+prota = Personagem(nome_prota, 100, ataque_prota, 100)
+# --- Sistema de itens ---#
+if opcão_obj == 1:
+    print("Sorteando seu item!")
+    time.sleep(0.2)
+    if item == 'Panela':
+        print("O item escolhido foi a panela!!\n A panela te dá 30% de buff de vida!!")
+        prota.item_panela()
+        print("Sua vida é:",prota.vida)
+    elif item == 'Faca':
+        print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque")
+        prota.item_faca()
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
         print("Seu ataque atual:",prota.ataque)
     else:
         pass
 
+<<<<<<< HEAD
+=======
+
+#     ataque_prota = float(input("Ataque (menor que 100): "))
+#     if ataque_prota >= 100 or ataque_prota >= 99.9:
+#         print("Valor inválido. Ataque deve ser menor que 100.")
+#     else:
+#         break
+
+# prota = Personagem(nome_prota, 100, ataque_prota, 100)
+
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
 # --- Inimigos ---
 demiurgo = Personagem("Demiurgo", 100, 80, 80)
 goblin = Personagem("Goblin", 70, 30, 80)
@@ -116,6 +158,7 @@ escorpiao = Personagem("Escorpião", 100, 20, 80)
 vampiro = Personagem("Vampiro", 1000, 45, 20)
 gorgona = Personagem("Górgona", 100, 25, 90)
 
+<<<<<<< HEAD
 
 inimigo_inicia = random.choice([demiurgo, goblin, escorpiao, vampiro, gorgona])
 
@@ -143,14 +186,35 @@ falas_inimigos_Caverna1 = [
 
 print(f"\nVocê encontrou o temido {inimigo_inicia}!\n")
 print(f"Status\nNome → {inimigo_inicia.nome}\nVida → {inimigo_inicia.vida}\nAtaque → {inimigo_inicia.ataque}")
+=======
+inimigo = random.choice([demiurgo, goblin, escorpiao, vampiro, gorgona])
+
+falas_inimigos = [
+    f"{inimigo.nome}: Seu nome é {prota.nome}, né? Você morrerá em minhas mãos.",
+    f"{inimigo.nome}: Vou te ensinar a não entrar no meu território.",
+    f"{inimigo.nome}: Hoje será o seu fim, {prota.nome}.",
+    f"{inimigo.nome}: Você teve coragem de vir até aqui? Arrependa-se!",
+    f"{inimigo.nome}: Não há escapatória para você, {prota.nome}!"
+]
+
+print(f"\nVocê encontrou o temido {inimigo}!\n")
+print(f"Status\nNome → {inimigo.nome}\nVida → {inimigo.vida}\nAtaque → {inimigo.ataque}")
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
 
 # --- Loop principal da batalha ---
 while True:
     print("\n--- Sua vez ---")
+<<<<<<< HEAD
     acao = input("Atacar, Curar, Fugir ou Poupar? (1 para status,2 pra inventario): ").lower()
 
     if acao == "atacar":
         prota.atacar(inimigo_inicia)
+=======
+    acao = input("Atacar, Curar, Fugir ou Poupar? (1 para status): ").lower()
+
+    if acao == "atacar":
+        prota.atacar(inimigo)
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
     elif acao == "curar":
         prota.cura()
     elif acao == "fugir":
@@ -162,6 +226,7 @@ while True:
             continue
     elif acao == "poupar":
         if random.randint(1, 2) == 1:
+<<<<<<< HEAD
             print(f"O inimigo {inimigo_inicia.nome} foi poupado e fugiu!")
             break
         else:
@@ -172,10 +237,21 @@ while True:
         continue
     elif acao == "2":
         print("Itens:",*prota.inventario)
+=======
+            print(f"O inimigo {inimigo.nome} foi poupado e fugiu!")
+            break
+        else:
+            print(f"{inimigo.nome}: Você acha que pode me poupar? Ridículo!")
+    elif acao == "1":
+        prota.status()
+        inimigo.status()
+        continue
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
     else:
         print("Ação inválida.")
         continue
 
+<<<<<<< HEAD
     if inimigo_inicia.morto():
         print(f"\n{inimigo_inicia.nome} foi derrotado! 🏆")
         break
@@ -184,6 +260,16 @@ while True:
 
     # --- Turno do inimigo ---
     print(f"\n--- Turno do {inimigo_inicia.nome} ---")
+=======
+    if inimigo.morto():
+        print(f"\n{inimigo.nome} foi derrotado! 🏆")
+        break
+
+    inimigo.sistema_ferido()
+
+    # --- Turno do inimigo ---
+    print(f"\n--- Turno do {inimigo.nome} ---")
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
     time.sleep(1)
     if random.randint(1, 2) == 1:
         inimigo.atacar(prota)
@@ -209,6 +295,7 @@ while True:
     print("\nStatus:")
     prota.status()
     inimigo.status()
+<<<<<<< HEAD
 
 #--- Escolha de campanha --- 
 print(f"você saiu vitorio {prota.nome}\n Quer continuar sua jornada?\n")
@@ -228,3 +315,5 @@ if escolha_caverna1 == 1:
         print(f"O terrivel {inimigo_caverna1} vem pra te impedir")
         print(random.choice(falas_inimigos_Caverna1))
         prota.status()
+=======
+>>>>>>> c3eb3d1c0f8c49e1c77896914aa536666c39e5bd
