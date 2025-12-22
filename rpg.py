@@ -1,31 +1,23 @@
 import time
 import random
 
-#--- Funções ---
+# --- Funções de Utilidade ---
 def caminhada():
-    if random.randint(1,3) == 1:
-        print("Caminhando....")
-        time.sleep(30)
-    elif random.randint(1,3) == 2:
-        print("Caminhando...")
-        time.sleep(20)
-    else:
-        print("Caminhando...")
-        time.sleep(15)
-
+    print("\nCaminhando...")
+    tempo = random.choice([15, 20, 30])
+    time.sleep(tempo / 10) # Reduzi o tempo para testes, mude para 'tempo' para o original
+    print("Você seguiu adiante...")
 
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
         self.nome = nome
         self.vida = vida
+        self.max_vida = vida
         self.ataque = ataque
         self.defesa = defesa
         self.ferido = False
         self.rage = False
         self.inventario = []
-
-    def __str__(self):
-        return self.nome
 
     def atacar(self, alvo):
         n = random.randint(0, 3)
@@ -52,179 +44,117 @@ class Personagem:
 
     def cura(self):
         bonus = random.randint(1, 2)
-        if bonus == 2:
-            cura_total = 30
-            print(f"{self.nome} recebeu bônus e curou {cura_total} de vida!")
-        else:
-            cura_total = 15
-            print(f"{self.nome} curou {cura_total} de vida!")
-        self.vida = min(100, self.vida + cura_total)
-    def item_panela(self,item):
-        self.inventario.append(item)
-        self.vida += self.vida * 0.30
-        self.ataque -= self.ataque * 0.20
-
-    def item_faca(self,item):
-        self.inventario.append(item)
-        if not self.rage:
-            self.ataque += self.ataque * 0.40
-            self.rage = True
+        cura_total = 30 if bonus == 2 else 15
+        print(f"{self.nome} curou {cura_total} de vida!")
+        self.vida = min(self.max_vida, self.vida + cura_total)
 
     def status(self):
-        print(f"{self.nome} → Vida: {self.vida:.0f} | Ataque: {self.ataque} | Defesa: {self.defesa}")
+        print(f"{self.nome} → Vida: {self.vida:.0f} | Ataque: {self.ataque:.1f} | Defesa: {self.defesa}")
 
     def morto(self):
         return self.vida <= 0
 
-# --- Itens ---
-itens = ['Panela','Faca']
-item = random.choice(itens)
-# --- Criação do jogador ---
-nome_prota = input("Nome do seu personagem: ")
-opcão_obj = int(input("Quer um Item Aleatorio?(Isso custa 20% do seu ataque)\n 1-Sim ou 2-Não:"))
-ataque_prota = float(input("Ataque (menor que 100): "))
+# --- Lógica de Combate Centralizada ---
+def sistema_de_combate(prota, inimigo, falas_inimigo):
+    print(f"\n--- INÍCIO DA BATALHA: {prota.nome} VS {inimigo.nome} ---")
+    
+    while not prota.morto() and not inimigo.morto():
+        print("\n--- Sua vez ---")
+        acao = input("Atacar, Curar, Fugir ou Poupar? (1: Status | 2: Itens): ").lower()
 
-# --- Verificação de Ataque
-while ataque_prota >= 100:
-    ataque_prota = float(input("Valor inválido. Ataque menor que 100: "))
-
-#--- mini cheat
-if nome_prota == "petrakiiopy":
-    prota = Personagem(nome_prota,10000,9999.9,10000)
-else:
-    prota = Personagem(nome_prota, 100, ataque_prota, 100)
-
-# --- Sistema de itens ---#
-if opcão_obj == 1:
-    print("Sorteando seu item!\n")
-    time.sleep(0.2)
-    if item == 'Panela':
-        print("O item escolhido foi a panela!!\n A panela te dá 30% de buff de vida!!\n")
-        prota.item_panela(item)
-        print("Sua vida é:",prota.vida)
-    elif item == 'Faca':
-        print("Seu item escolhido foi a Faca!!\n A Faca te da um buff de 40% de ataque!!\n")
-        prota.item_faca(item)
-        print("Seu ataque atual:",prota.ataque)
-    else:
-        pass
-
-# --- Inimigos ---
-demiurgo = Personagem("Demiurgo", 100, 80, 80)
-goblin = Personagem("Goblin", 70, 30, 80)
-escorpiao = Personagem("Escorpião", 100, 20, 80)
-vampiro = Personagem("Vampiro", 1000, 45, 20)
-gorgona = Personagem("Górgona", 100, 25, 90)
-
-
-inimigo_inicial = random.choice([demiurgo, goblin, escorpiao, vampiro, gorgona])
-
-falas_inimigos = [
-    f"{inimigo_inicia.nome}: Seu nome é {prota.nome}, né? Você morrerá em minhas mãos.",
-    f"{inimigo_inicia.nome}: Vou te ensinar a não entrar no meu território.",
-    f"{inimigo_inicia.nome}: Hoje será o seu fim, {prota.nome}.",
-    f"{inimigo_inicia.nome}: Você teve coragem de vir até aqui? Arrependa-se!",
-    f"{inimigo_inicia.nome}: Não há escapatória para você, {prota.nome}!"
-]
-#--- inimigos caverna
-toupera = Personagem("Toupera Humana",85,15,80)
-slime = Personagem("Slime",45,25,40)
-pedra = Personagem("Pedra-louca",140,1,30)
-
-inimigo_caverna1 = random.choice([toupera,slime,pedra])
-
-falas_inimigos_Caverna1 = [
-    f"{inimigo_caverna1}:Vá embora da nossa casa!!",
-    f"{inimigo_caverna1}:Você quer mesmo apanhar não é?"
-    f"{inimigo_caverna1}:Você teve coragem de achar nosso lar hein?",
-    f"{inimigo_caverna1}:Porque você está fazendo isso?"
-]
-
-
-print(f"\nVocê encontrou o temido {inimigo_inicia}!\n")
-print(f"Status\nNome → {inimigo_inicia.nome}\nVida → {inimigo_inicia.vida}\nAtaque → {inimigo_inicia.ataque}")
-
-# --- Loop principal da batalha ---
-while True:
-    print("\n--- Sua vez ---")
-    acao = input("Atacar, Curar, Fugir ou Poupar? (1 para status,2 pra inventario): ").lower()
-
-    if acao == "atacar":
-        prota.atacar(inimigo_inicia)
-    elif acao == "curar":
-        prota.cura()
-    elif acao == "fugir":
-        if random.randint(1, 2) == 1:
-            print("Você conseguiu fugir com sucesso!")
-            break
-        else:
-            print("O inimigo impediu sua fuga!")
+        if acao == "atacar":
+            prota.atacar(inimigo)
+        elif acao == "curar":
+            prota.cura()
+        elif acao == "fugir":
+            if random.randint(1, 2) == 1:
+                print("Você fugiu!")
+                return "fugiu"
+            print("Fuga falhou!")
+        elif acao == "poupar":
+            if random.randint(1, 2) == 1:
+                print(f"O inimigo {inimigo.nome} foi poupado!")
+                return "poupado"
+            print(f"{inimigo.nome} recusa sua piedade!")
+        elif acao == "1":
+            prota.status()
+            inimigo.status()
             continue
-    elif acao == "poupar":
-        if random.randint(1, 2) == 1:
-            print(f"O inimigo {inimigo_inicia.nome} foi poupado e fugiu!")
-            break
+        elif acao == "2":
+            print("Inventário:", prota.inventario)
+            continue
+        
+        if inimigo.morto():
+            print(f"\n{inimigo.nome} foi derrotado! 🏆")
+            return "vitoria"
+
+        # Turno do Inimigo
+        print(f"\n--- Turno do {inimigo.nome} ---")
+        time.sleep(0.5)
+        inimigo.sistema_ferido()
+        
+        if random.random() > 0.3:
+            inimigo.atacar(prota)
         else:
-            print(f"{inimigo_inicia.nome}: Você acha que pode me poupar? Ridículo!")
-    elif acao == "1":
+            inimigo.cura()
+            
+        if random.randint(1, 2) == 1:
+            print(f"> {inimigo.nome}: {random.choice(falas_inimigo)}")
+
+        prota.sistema_ferido()
         prota.status()
-        inimigo_inicia.status()
-        continue
-    elif acao == "2":
-        print("Itens:",*prota.inventario)
-    else:
-        print("Ação inválida.")
-        continue
-
-    if inimigo_inicia.morto():
-        print(f"\n{inimigo_inicia.nome} foi derrotado! 🏆")
-        break
-
-    inimigo_inicia.sistema_ferido()
-
-    # --- Turno do inimigo ---
-    print(f"\n--- Turno do {inimigo_inicia.nome} ---")
-    time.sleep(1)
-    if random.randint(1, 2) == 1:
-        inimigo.atacar(prota)
-    else:
-        inimigo.cura()
-
-    if random.randint(1, 2) == 1:
-        print(random.choice(falas_inimigos))
-
-    prota.sistema_ferido()
+        inimigo.status()
 
     if prota.morto():
-        print(f"\n{prota.nome} foi derrotado...")
-        print(f"{prota.nome}, não desista! Tenha determinação ❤️")
-        determinacao = input("Você tem determinação? (sim/não): ").lower()
-        if determinacao == "sim":
-            print(f"*{prota.nome} retornou ao mundo e continuou sua jornada...*")
-            break
-        else:
-            print(f"*{prota.nome} morreu na batalha contra {inimigo.nome}*")
-            break
+        print(f"\n{prota.nome} caiu em batalha...")
+        return "derrota"
 
-    print("\nStatus:")
-    prota.status()
-    inimigo.status()
 
-#--- Escolha de campanha --- 
-print(f"você saiu vitorio {prota.nome}\n Quer continuar sua jornada?\n")
-resposta_jornada = int(input("1-Sim or 2-Não:"))
-if resposta_jornada == 1:
-    pass
+nome_prota = input("Nome do seu personagem: ")
+ataque_prota = float(input("Ataque (menor que 100): "))
+if ataque_prota >= 100: ataque_prota = 99
+
+prota = Personagem(nome_prota, 100, ataque_prota, 100)
+
+# Cheat Mode
+if nome_prota == "petrakiiopy":
+    prota.vida = prota.max_vida = 10000
+    prota.ataque = 9999
+
+# Itens Iniciais
+if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
+    item = random.choice(['Panela', 'Faca'])
+    prota.inventario.append(item)
+    if item == 'Panela':
+        print("Você pegou a Panela! (+Vida, -Ataque)")
+        prota.max_vida *= 1.3
+        prota.vida = prota.max_vida
+        prota.ataque *= 0.8
+    else:
+        print("Você pegou a Faca! (+Ataque)")
+        prota.ataque *= 1.4
+
+# --- Início da Jornada ---
+inimigos_mundo = [
+    Personagem("Demiurgo", 100, 40, 50),
+    Personagem("Goblin", 70, 30, 40),
+    Personagem("Vampiro", 120, 45, 20)
+]
+
+inimigo_atual = random.choice(inimigos_mundo)
+falas = ["Vou te esmagar!", "Você é fraco!", "Sinta minha fúria!"]
+
+resultado = sistema_de_combate(prota, inimigo_atual, falas)
+
+if resultado == "vitoria" or resultado == "poupado":
+    print(f"\nVocê seguiu adiante, {prota.nome}!")
+    caminhada()
+    
+    #Caverna
+    print("\nVocê encontrou uma caverna escura. Entrar?")
+    if input("1-Sim / 2-Não: ") == "1":
+        caverna_inimigo = Personagem("Toupeira Humana", 85, 15, 80)
+        falas_caverna = ["Saia da minha casa!", "O brilho nos seus olhos me irrita!"]
+        sistema_de_combate(prota, caverna_inimigo, falas_caverna)
 else:
-    print("Você foi um bom guerreiro")
-
-caminhada()
-
-#---Caverna 1 ---
-print('"Após um bom tempo de caminhada você acha uma caverna e a adentra"\n Você acha um báu você se aproxima?')
-escolha_caverna1 = int(input("1-Sim or 2-Não:"))
-if escolha_caverna1 == 1:
-    if random.randint(1,2) is not 1:
-        print(f"O terrivel {inimigo_caverna1} vem pra te impedir")
-        print(random.choice(falas_inimigos_Caverna1))
-        prota.status()
+    print("Fim da linha para você.")
