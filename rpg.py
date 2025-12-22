@@ -1,9 +1,6 @@
 import time
 import random
 
-# Finais
-escolha_final = None
-
 # --- Funções ---
 def caminhada():
     print("\nCaminhando...")
@@ -18,6 +15,14 @@ def credibilidade_bondade(resultado,prota):
         prota.bondade += 20
     else:
         pass
+
+def agradecimentos(final):
+    print("="*30)
+    print(f" ~~~ Desbloqueou final:{final.upper()} ~~~")
+    print("="*30)
+    print("Obrigado por jogar,espero que tenha gostado da minha experiencia!!")
+    print("Este é dos meus primeiros projetos de game em python!")
+    print("="*30)
 
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
@@ -66,6 +71,14 @@ class Personagem:
 
     def morto(self):
         return self.vida <= 0
+
+    def verificar_final(self):
+        if self.credibilidade >= 40:
+            return "hero"
+        elif self.bondade >= 40:
+            return "pacifist"
+        else:
+            return "neutro"
 
 # --- Lógica de Combate ---
 def sistema_de_combate(prota, inimigo, falas_inimigo):
@@ -157,6 +170,12 @@ inimigos_mundo = [
 inimigo_atual = random.choice(inimigos_mundo)
 falas = ["Vou te esmagar!", "Você é fraco!", "Sinta minha fúria!"]
 
+# Boss final
+king = Personagem("Rei Demonio", 200,40,50)
+falas_boss = ["Você ousa desafiar o rei?","Vá embora humano,você não é ninguém","Você conhecerá o poder de um rei!"]
+
+
+
 resultado = sistema_de_combate(prota, inimigo_atual, falas)
 
 if resultado == "vitoria" or resultado == "poupado":
@@ -171,18 +190,43 @@ if resultado == "vitoria" or resultado == "poupado":
         falas_caverna = ["Saia da minha casa!", "O brilho nos seus olhos me irrita!"]
         resultado_caverna = sistema_de_combate(prota, caverna_inimigo, falas_caverna)
         if resultado_caverna == "vitoria" or  "poupado":
-            credibilidade_bondad(resultado_caverna,prota)  
+            credibilidade_bondade(resultado_caverna,prota)  
             print("--- Você abre o báu e encontra uma espada sagrada,Você a pega?")
             escolha_espada = int(input("1-Sim/2-Não:"))
             if escolha_espada == 1:
-                escolha_final = True
                 print("--- Você pegou a espada ---")
                 prota.inventario.append("Espada Sagrada")
                 print("--- um anjo desce do céu e te da uma missão pra derrotar o rei demonio,Você aceita? ---")
-                escolha_quest = int(input("1-Sim/2-Não"))
+                escolha_quest = int(input("1-Sim/2-Não:"))
                 if escolha_quest == 1:
-                    print("--- Você aceita a missão do anjo e marcha até os confins do submundo atrás do rei demonio --- ")
-                    
-
+                    print("--- Você aceita a missão do anjo e marcha até os confins do submundo atrás do rei demonio --- \n")
+                    print(f"{king.nome}:Você não é só corajoso de me enfrentar é um tolo por vir morrer nas minhas mãos!")
+                    luta_final = sistema_de_combate(prota,king,falas_boss)
+                    credibilidade_bondade(luta_final,prota)
+                    if luta_final == "vitoria" or luta_final == "poupado":
+                        final = prota.verificar_final()
+                        if  final  == "hero":
+                            print("--- Após derotar o famoso e temido rei demonio você continua sua jornada como guerreio,porém sendo lembrado como 'O Herio' ")
+                            agradecimentos(final)
+                        elif final == "pacifist":
+                            print("--- No final você poupa o rei demonio e o tira do trono unificando todas as raças ---")
+                            agradecimentos(final)
+                        else:
+                            print("--- Você consegue comprir a missão do anjo e trazer paz a terra,continuando sua jornada! ---")
+                            agradecimentos(final)
+                else:
+                    print("--- Você nega o pedido do anjo,afinal isso não é problema seu --- ")
+                    final = "Isso é problema meu?"
+                    agradecimentos(final)
+            else:
+                print("--- Você sai da caverna,uma batalha ganha atoa porém a jornada continua --- ")
+                final = "guerreiro nada sagrado"
+                agradecimentos(final)
+    else:
+        print("--- Você ignora a caverna e continua suar jornada ---")
+        final = "e eu sou mineiro?"
+        agradecimentos(final)
 else:
     print("Fim da linha para você.")
+    final = "heroi fracasso"
+    agradecimentos(final)
