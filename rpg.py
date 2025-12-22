@@ -1,12 +1,23 @@
 import time
 import random
 
-# --- Funções de Utilidade ---
+# Finais
+escolha_final = None
+
+# --- Funções ---
 def caminhada():
     print("\nCaminhando...")
     tempo = random.choice([15, 20, 30])
-    time.sleep(tempo / 10) # Reduzi o tempo para testes, mude para 'tempo' para o original
+    time.sleep(tempo / 10) 
     print("Você seguiu adiante...")
+
+def credibilidade_bondade(resultado,prota):
+    if resultado == 'vitoria':
+        prota.credibilidade += 20
+    elif resultado == 'poupado':
+        prota.bondade += 20
+    else:
+        pass
 
 class Personagem:
     def __init__(self, nome, vida, ataque, defesa):
@@ -17,6 +28,8 @@ class Personagem:
         self.defesa = defesa
         self.ferido = False
         self.rage = False
+        self.credibilidade = 0
+        self.bondade = 0
         self.inventario = []
 
     def atacar(self, alvo):
@@ -54,7 +67,7 @@ class Personagem:
     def morto(self):
         return self.vida <= 0
 
-# --- Lógica de Combate Centralizada ---
+# --- Lógica de Combate ---
 def sistema_de_combate(prota, inimigo, falas_inimigo):
     print(f"\n--- INÍCIO DA BATALHA: {prota.nome} VS {inimigo.nome} ---")
     
@@ -147,6 +160,7 @@ falas = ["Vou te esmagar!", "Você é fraco!", "Sinta minha fúria!"]
 resultado = sistema_de_combate(prota, inimigo_atual, falas)
 
 if resultado == "vitoria" or resultado == "poupado":
+    credibilidade_bondade(resultado,prota)
     print(f"\nVocê seguiu adiante, {prota.nome}!")
     caminhada()
     
@@ -155,6 +169,20 @@ if resultado == "vitoria" or resultado == "poupado":
     if input("1-Sim / 2-Não: ") == "1":
         caverna_inimigo = Personagem("Toupeira Humana", 85, 15, 80)
         falas_caverna = ["Saia da minha casa!", "O brilho nos seus olhos me irrita!"]
-        sistema_de_combate(prota, caverna_inimigo, falas_caverna)
+        resultado_caverna = sistema_de_combate(prota, caverna_inimigo, falas_caverna)
+        if resultado_caverna == "vitoria" or  "poupado":
+            credibilidade_bondad(resultado_caverna,prota)  
+            print("--- Você abre o báu e encontra uma espada sagrada,Você a pega?")
+            escolha_espada = int(input("1-Sim/2-Não:"))
+            if escolha_espada == 1:
+                escolha_final = True
+                print("--- Você pegou a espada ---")
+                prota.inventario.append("Espada Sagrada")
+                print("--- um anjo desce do céu e te da uma missão pra derrotar o rei demonio,Você aceita? ---")
+                escolha_quest = int(input("1-Sim/2-Não"))
+                if escolha_quest == 1:
+                    print("--- Você aceita a missão do anjo e marcha até os confins do submundo atrás do rei demonio --- ")
+                    
+
 else:
     print("Fim da linha para você.")
