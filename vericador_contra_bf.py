@@ -1,103 +1,103 @@
-import random
+import time
+from itertools import product
 
-ver_senhas = None
+# Conjuntos de caracteres
+NUMEROS = "0123456789"
+ALFABETO = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+SIMBOLOS = "!@#$%^&*()-_=+[{]};:,.<>?/|"
 
-def contar_caracteres(senha):
-    digitos = 0
-    for letras in senha:
-        digitos +=1
-    return digitos
 
-def analisar(senha,numeros,alfabeto,simbolos):
-    if all(c in numeros for c in senha):
-        return "NUM"
-    
-    elif all(c in alfabeto for c in senha):
-        return "LETRAS"
-    
-    elif all(c in simbolos for c in senha):
-        return "SIMBOLOS"
-    
-    # Se tiver uma mistura de tudo
-    elif any(c in numeros for c in senha) and any(c in alfabeto for c in senha) and any(c in simbolos for c in senha):
+def analisar_senha(senha):
+    tem_num = any(c in NUMEROS for c in senha)
+    tem_letra = any(c in ALFABETO for c in senha)
+    tem_simbolo = any(c in SIMBOLOS for c in senha)
+
+    if tem_num and tem_letra and tem_simbolo:
         return "MISTA"
-    
+    elif tem_num and not tem_letra and not tem_simbolo:
+        return "NUM"
+    elif tem_letra and not tem_num and not tem_simbolo:
+        return "LETRAS"
+    elif tem_simbolo and not tem_num and not tem_letra:
+        return "SIMBOLOS"
     else:
-        return "COMPOSTO"
-def testar(digito,tipo,opn,senha):
-    numeros = "1234567890"
-    alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    simbolos = "!@#$%^&*()-_=+[{]};:,.<>?/|"
-    tentativa = 0 
+        return "COMPOSTA"
 
-    if tipo == "MISTA":
-        dado = numeros+alfabeto+simbolos
-    elif tipo == "SIMBOLOS":
-        dado = simbolos
+
+def escolher_charset(tipo):
+    if tipo == "NUM":
+        return NUMEROS
     elif tipo == "LETRAS":
-        dado = alfabeto
-    elif tipo == "NUM":
-        dado = numeros
+        return ALFABETO
+    elif tipo == "SIMBOLOS":
+        return SIMBOLOS
     else:
-        dado = numeros+alfabeto+simbolos
-    
-    if opn == True:
-        while True:
-            combinação = "".join(random.choices(dado,k=digito))
-            tentativa +=1
-            print(f"Senha testada:{combinação}.Tentativa:{tentativa}")
-            if combinação == senha:
-                print("Sua senha foi quebrada pelo computador!")
-                if tentativa >= 10000000000:
-                    print("Paramos os testes por segurança!")
-                    break
-                else:
-                    pass
-            else:
-                pass
-    else:
-        while True:
-            combinação = random.choices(dado,k=digito)
-            if combinação == senha:
-                print("Sua senha foi quebrada pelo computador!")
-            else:
-                pass
-  
-        
-numeros = "1234567890"
-alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-simbolos = "!@#$%^&*()-_=+[{]};:,.<>?/|" 
-tentativas = 0
+        return NUMEROS + ALFABETO + SIMBOLOS
 
-senha = input("Me diga sua senha forte:")
-tipo_de_senha = analisar(senha,numeros,alfabeto,simbolos)
-digitos = contar_caracteres(senha)
-print("O progama vai tentar quebra-lá")
-opn = int(input("Você quer ver o programa testando as senhas?\n1-Sim/2-Não:"))
-if opn == 1:
-    ver_senhas = True
-else:
-    ver_senhas = False
 
-with open("password-wordlist.txt") as wordlist:
-    for senhas in wordlist:
-        senhas = senhas.strip()
-        if ver_senhas == True:
-            tentativas +=1 
-            print(f"Senha testada:{senhas},Tentiva:{tentativas}")
-            if senhas == senha:
-                print("Sua senha foi achada na wordlist!")
-                break
-        else:
-            if senhas == senha:
-                print("Sua senha foi achada na wordlist!")
-                break
+def ataque_wordlist(senha, ver):
+    tentativas = 0
+    try:
+        with open("password-wordlist.txt", "r", encoding="utf-8", errors="ignore") as wordlist:
+            for linha in wordlist:
+                tentativa = linha.strip()
+                tentativas += 1
+
+                if ver:
+                    print(f"[{tentativas}] Testando: {tentativa}")
+
+                if tentativa == senha:
+                    print(f"\nSenha encontrada na wordlist em {tentativas} tentativas!")
+                    return True
+    except FileNotFoundError:
+        print("Wordlist não encontrada.")
+
+    return False
+
+
+def ataque_bruteforce(senha, ver):
+    tipo = analisar_senha(senha)
+    charset = escolher_charset(tipo)
+    tamanho = len(senha)
+
+    print(f"\nIniciando brute force | Tipo: {tipo} | Charset: {len(charset)} caracteres")
+
+    inicio = time.time()
+    tentativas = 0
+
+    for comb in product(charset, repeat=tamanho):
+        tentativa = "".join(comb)
+        tentativas += 1
+
+        if ver:
+            print(f"[{tentativas}] {tentativa}")
+
+        if tentativa == senha:
+            fim = time.time()
+            print("\n🔥 SENHA QUEBRADA 🔥")
+            print(f"Senha: {tentativa}")
+            print(f"Tentativas: {tentativas}")
+            print(f"Tempo: {fim - inicio:.2f} segundos")
+            return
+
+    print("Não foi possível quebrar a senha.")
+
+
+# ================= PROGRAMA PRINCIPAL =================
+
+senha = input("Digite sua senha para teste: ")
+
+ver = input("Deseja ver as tentativas? (s/n): ").lower() == "s"
+
+print("\nAnalisando senha...")
+tipo = analisar_senha(senha)
+print(f"Tipo da senha: {tipo}")
+print(f"Tamanho: {len(senha)} caracteres")
+
+print("\nTentando wordlist...")
+if not ataque_wordlist(senha, ver):
+    escolha = input("\nSenha não encontrada. Tentar brute force? (s/n): ").lower()
+    if escolha == "s":
+        ataque_bruteforce(senha, ver)
     else:
-        opn2 = int(input("Sua senha não foi encontrada na wordlist,você deseja tentar um ataque de força bruta nela?\n 1-Sim/2-Não:"))
-        if opn2 == 1:
-            print(*"=")
-            print("Vamos testar sua senha!")
-            print(*"=")
-            testar(digitos,tipo_de_senha,ver_senhas,senha)
-        else:
-            print("tudo bem,sua senha é forte!")
+        print("Ok! Senha considerada segura contra wordlist.")
