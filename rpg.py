@@ -1,7 +1,18 @@
 import time
 import random
+import qrcode
 
 # --- Funções ---
+def apoiar():
+    opn = int(input("Gostaria de me apoiar olhando outros projetos?\n1-Sim/2-Não:"))
+    if opn == 1:
+        url = "https://petrakiio.github.io/WoodLab/"
+        img = qrcode.make(url)
+        img.save("Qrcode.png")
+        img.show()
+    else:
+        print("Tudo bem,Obrigado por jogar meu mini jogo!")
+
 def caminhada():
     print("\nCaminhando...")
     tempo = random.choice([15, 20, 30])
@@ -13,6 +24,8 @@ def credibilidade_bondade(resultado,prota):
         prota.credibilidade += 20
     elif resultado == 'poupado':
         prota.bondade += 20
+    elif resultado == 'fugiu':
+        prota.fuga += 20
     else:
         pass
 
@@ -35,6 +48,7 @@ class Personagem:
         self.rage = False
         self.credibilidade = 0
         self.bondade = 0
+        self.fuga = 0
         self.inventario = []
 
     def atacar(self, alvo):
@@ -77,6 +91,8 @@ class Personagem:
             return "hero"
         elif self.bondade >= 40:
             return "pacifist"
+        elif self.fuga >=40:
+            return "cagão"
         else:
             return "neutro"
 
@@ -148,19 +164,35 @@ if nome_prota == "petrakiiopy":
     prota.ataque = 9999
 
 # Itens Iniciais
-if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
-    item = random.choice(['Panela', 'Faca'])
-    prota.inventario.append(item)
-    if item == 'Panela':
-        print("Você pegou a Panela! (+Vida, -Ataque)")
-        prota.max_vida *= 1.3
-        prota.vida = prota.max_vida
-        prota.ataque *= 0.8
-    else:
-        print("Você pegou a Faca! (+Ataque)")
-        prota.ataque *= 1.4
+itens = {
+    "Panela": {
+        "vida_mult": 1.3,
+        "ataque_mult": 0.8,
+        "msg": "Você pegou a Panela! (+Vida, -Ataque)"
+    },
+    "Faca": {
+        "vida_mult": 1.0,
+        "ataque_mult": 1.4,
+        "msg": "Você pegou a Faca! (+Ataque)"
+    },
+    "Espada":{
+        "vida_mult":1.0,
+        "ataque_mult":2.5,
+        "msg":"Você pegou a espada!(+Ataque)"
+    }
+}
 
-# --- Início da Jornada ---
+if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
+    item_nome = random.choice(list(itens.keys()))
+    item = itens[item_nome]
+
+    prota.inventario.append(item_nome)
+    print(item["msg"])
+
+    prota.max_vida *= item["vida_mult"]
+    prota.vida = prota.max_vida
+    prota.ataque *= item["ataque_mult"]
+
 inimigos_mundo = [
     Personagem("Demiurgo", 100, 40, 50),
     Personagem("Goblin", 70, 30, 40),
@@ -208,25 +240,32 @@ if resultado == "vitoria" or resultado == "poupado":
                         if  final  == "hero":
                             print("--- Após derotar o famoso e temido rei demonio você continua sua jornada como guerreio,porém sendo lembrado como 'O Herio' ")
                             agradecimentos(final)
+                            apoiar()
                         elif final == "pacifist":
                             print("--- No final você poupa o rei demonio e o tira do trono unificando todas as raças ---")
                             agradecimentos(final)
+                            apoiar()
                         else:
                             print("--- Você consegue comprir a missão do anjo e trazer paz a terra,continuando sua jornada! ---")
                             agradecimentos(final)
+                            apoiar()
                 else:
                     print("--- Você nega o pedido do anjo,afinal isso não é problema seu --- ")
                     final = "Isso é problema meu?"
                     agradecimentos(final)
+                    apoiar()
             else:
                 print("--- Você sai da caverna,uma batalha ganha atoa porém a jornada continua --- ")
                 final = "guerreiro nada sagrado"
                 agradecimentos(final)
+                apoiar()
     else:
         print("--- Você ignora a caverna e continua suar jornada ---")
         final = "e eu sou mineiro?"
         agradecimentos(final)
+        apoiar()
 else:
     print("Fim da linha para você.")
     final = "heroi fracasso"
     agradecimentos(final)
+    apoiar()
