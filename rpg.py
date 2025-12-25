@@ -13,11 +13,26 @@ def apoiar():
     else:
         print("Tudo bem,Obrigado por jogar meu mini jogo!")
 
-def caminhada():
+def caminhada(item,prota):
     print("\nCaminhando...")
     tempo = random.choice([15, 20, 30])
     time.sleep(tempo / 10) 
     print("Você seguiu adiante...")
+    chance = random.randint(1,10)
+    if chance == 5:
+        print(*"=")
+        print("Você achou um báu,quer abrir?")
+        print(*"=")
+        opn = int(input("1-Sim/2-Não:"))
+        if opn == 1:
+            if prota.inventario_cheio == True:
+                print("Inventario cheio")
+            else:
+                prota.inventario.append(item)
+                print("item adicionado ao jogador")
+        else:
+            print("Você ignora o item")
+
 
 def credibilidade_bondade(resultado,prota):
     if resultado == 'vitoria':
@@ -28,6 +43,16 @@ def credibilidade_bondade(resultado,prota):
         prota.fuga += 20
     else:
         pass
+def dar_item(prota,itens):
+    item_nome = random.choice(list(itens.keys()))
+    item = itens[item_nome]
+
+    prota.inventario.append(item_nome)
+    print(item["msg"])
+
+    prota.max_vida *= item["vida_mult"]
+    prota.vida = prota.max_vida
+    prota.ataque *= item["ataque_mult"]
 
 def agradecimentos(final):
     print("="*30)
@@ -50,6 +75,8 @@ class Personagem:
         self.bondade = 0
         self.fuga = 0
         self.inventario = []
+        self.inventario_cheio = False
+        self.contado = 0
 
     def atacar(self, alvo):
         n = random.randint(0, 3)
@@ -73,6 +100,14 @@ class Personagem:
             ferimento = self.ataque / 2
             self.vida -= ferimento
             print(f"{self.nome} está sangrando e perdeu {ferimento:.0f} de vida!")
+    while True:
+        for itens in inventario:
+            self.contado +=1
+            if contado >=5:
+                self.inventario_cheio = True
+                break
+            else:
+                pass
 
     def cura(self):
         bonus = random.randint(1, 2)
@@ -162,7 +197,10 @@ prota = Personagem(nome_prota, 100, ataque_prota, 100)
 if nome_prota == "petrakiiopy":
     prota.vida = prota.max_vida = 10000
     prota.ataque = 9999
-
+#itens baús
+itens_bau = {
+    ""
+}
 # Itens Iniciais
 itens = {
     "Panela": {
@@ -179,19 +217,18 @@ itens = {
         "vida_mult":1.0,
         "ataque_mult":2.5,
         "msg":"Você pegou a espada!(+Ataque)"
+    },
+    "Armadura":{
+        "vida_mult":2.5,
+        "ataque_mult":0.6,
+        "msg":"Você pegou a armadura(+Vida,-Ataque)"
     }
 }
 
 if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
-    item_nome = random.choice(list(itens.keys()))
-    item = itens[item_nome]
-
-    prota.inventario.append(item_nome)
-    print(item["msg"])
-
-    prota.max_vida *= item["vida_mult"]
-    prota.vida = prota.max_vida
-    prota.ataque *= item["ataque_mult"]
+    dar_item(prota,itens)
+else:
+    pass
 
 inimigos_mundo = [
     Personagem("Demiurgo", 100, 40, 50),
@@ -221,7 +258,7 @@ if resultado == "vitoria" or resultado == "poupado":
         caverna_inimigo = Personagem("Toupeira Humana", 85, 15, 80)
         falas_caverna = ["Saia da minha casa!", "O brilho nos seus olhos me irrita!"]
         resultado_caverna = sistema_de_combate(prota, caverna_inimigo, falas_caverna)
-        if resultado_caverna == "vitoria" or  "poupado":
+        if resultado_caverna == "vitoria" or  resultado_caverna == "poupado":
             credibilidade_bondade(resultado_caverna,prota)  
             print("--- Você abre o báu e encontra uma espada sagrada,Você a pega?")
             escolha_espada = int(input("1-Sim/2-Não:"))
