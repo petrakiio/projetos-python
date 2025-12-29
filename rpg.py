@@ -1,6 +1,7 @@
 import time
 import random
 import qrcode
+import itens
 
 # --- Funções ---
 def apoiar():
@@ -76,7 +77,7 @@ class Personagem:
         self.fuga = 0
         self.inventario = []
         self.inventario_cheio = False
-        self.contado = 0
+        self.contador = 0
 
     def atacar(self, alvo):
         n = random.randint(0, 3)
@@ -100,12 +101,12 @@ class Personagem:
             ferimento = self.ataque / 2
             self.vida -= ferimento
             print(f"{self.nome} está sangrando e perdeu {ferimento:.0f} de vida!")
-    while True:
-        for itens in inventario:
-            self.contado +=1
-            if contado >=5:
-                self.inventario_cheio = True
-                break
+
+    def verificar_inv(self):
+        for itens in self.inventario:
+            self.contador +=1
+            if contador >= 5:
+                self.inventario_cheio = False
             else:
                 pass
 
@@ -197,34 +198,12 @@ prota = Personagem(nome_prota, 100, ataque_prota, 100)
 if nome_prota == "petrakiiopy":
     prota.vida = prota.max_vida = 10000
     prota.ataque = 9999
-#itens baús
-itens_bau = {
-    ""
-}
-# Itens Iniciais
-itens = {
-    "Panela": {
-        "vida_mult": 1.3,
-        "ataque_mult": 0.8,
-        "msg": "Você pegou a Panela! (+Vida, -Ataque)"
-    },
-    "Faca": {
-        "vida_mult": 1.0,
-        "ataque_mult": 1.4,
-        "msg": "Você pegou a Faca! (+Ataque)"
-    },
-    "Espada":{
-        "vida_mult":1.0,
-        "ataque_mult":2.5,
-        "msg":"Você pegou a espada!(+Ataque)"
-    },
-    "Armadura":{
-        "vida_mult":2.5,
-        "ataque_mult":0.6,
-        "msg":"Você pegou a armadura(+Vida,-Ataque)"
-    }
-}
 
+# Itens Iniciais/baus
+itens = itens.itens
+itens_bau = itens.itens_bau
+
+print(itens)
 if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
     dar_item(prota,itens)
 else:
