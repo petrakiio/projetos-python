@@ -1,7 +1,7 @@
 import time
 import random
 import qrcode
-import itens
+import item
 
 # --- Funções ---
 def apoiar():
@@ -21,9 +21,9 @@ def caminhada(item,prota):
     print("Você seguiu adiante...")
     chance = random.randint(1,10)
     if chance == 5:
-        print(*"=")
+        print("="*30)
         print("Você achou um báu,quer abrir?")
-        print(*"=")
+        print("="*30)
         opn = int(input("1-Sim/2-Não:"))
         if opn == 1:
             if prota.inventario_cheio == True:
@@ -189,8 +189,12 @@ def sistema_de_combate(prota, inimigo, falas_inimigo):
 
 
 nome_prota = input("Nome do seu personagem: ")
-ataque_prota = float(input("Ataque (menor que 100): "))
-if ataque_prota >= 100: ataque_prota = 99
+while True:
+    ataque_prota = float(input("Ataque (menor que 100): "))
+    if ataque_prota >= 100 or ataque_prota >= 99:
+        print("Ataque menor que 100!Tente novamente")
+    else:
+        break
 
 prota = Personagem(nome_prota, 100, ataque_prota, 100)
 
@@ -200,10 +204,9 @@ if nome_prota == "petrakiiopy":
     prota.ataque = 9999
 
 # Itens Iniciais/baus
-itens = itens.itens
-itens_bau = itens.itens_bau
+itens = item.itens
+itens_bau = item.itens_bau
 
-print(itens)
 if input("Quer um Item Aleatorio? (1-Sim / 2-Não): ") == "1":
     dar_item(prota,itens)
 else:
@@ -229,7 +232,7 @@ resultado = sistema_de_combate(prota, inimigo_atual, falas)
 if resultado == "vitoria" or resultado == "poupado":
     credibilidade_bondade(resultado,prota)
     print(f"\nVocê seguiu adiante, {prota.nome}!")
-    caminhada()
+    caminhada(itens_bau,prota)
     
     #Caverna
     print("\nVocê encontrou uma caverna escura. Entrar?")
