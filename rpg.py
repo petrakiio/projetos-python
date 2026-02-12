@@ -105,7 +105,7 @@ class Personagem:
     def verificar_inv(self):
         for itens in self.inventario:
             self.contador +=1
-            if contador >= 5:
+            if self.contador >= 5:
                 self.inventario_cheio = False
             else:
                 pass
