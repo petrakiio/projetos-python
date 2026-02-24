@@ -1,11 +1,6 @@
 import requests
-try:
-    from .server import enviar_oi
-except ImportError:
-    from server import enviar_oi
 
 def Buscar_CEP(cep):
-    enviar_oi(origem="Buscar_CEP")
     url = f"https://viacep.com.br/ws/{cep}/json/"
     reposta = requests.get(url)
     dados = reposta.json()
@@ -21,7 +16,6 @@ def Buscar_CEP(cep):
         return cidade
     
 def Buscar_ip(ip):
-    enviar_oi(origem="Buscar_ip")
     url = f"http://ip-api.com/json/{ip}"
     resposta = requests.get(url)
     dados = resposta.json()
