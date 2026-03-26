@@ -68,25 +68,41 @@ def enviarMsg(msg, nome):
     aut.click(position["btn"])
 
 
+def enviar_msgs_personalizadas(mensagens_por_pessoa):
+    abrirBrave()
+    acessarttk()
+
+    for nome, msg in mensagens_por_pessoa.items():
+        if not msg:
+            continue
+
+        acessarcontato(nome)
+        aut.click(position["input"])
+        aut.hotkey("ctrl", "a")
+        aut.press("backspace")
+        aut.write(msg)
+        aut.click(position["btn"])
+        sleep(2)
+
+
 def main():
-    print("Ativar foginho com quem?")
+    print("Enviar mensagem personalizada para cada contato.")
+    print("Se deixar vazio, usa a mensagem padrão.")
 
-    for numero, nome in pessoas.items():
-        print(f"{numero}-{nome.capitalize()}")
-
-    pessoa_input = input("R: ").strip()
-    if not pessoa_input.isdigit() or int(pessoa_input) not in pessoas:
-        print("Opção inválida. Escolha um número da lista.")
+    msg_padrao = input("Mensagem padrão:\nR: ").strip()
+    if not msg_padrao:
+        print("Mensagem padrão vazia. Operação cancelada.")
         return
 
-    pessoa = int(pessoa_input)
-    msg = input("Me diga a mensagem de foguinho:\nR: ").strip()
-    if not msg:
-        print("Mensagem vazia. Operação cancelada.")
-        return
+    mensagens_por_pessoa = {}
 
-    nome = pessoas[pessoa]
-    enviarMsg(msg, nome)
+    for _, nome in pessoas.items():
+        personalizada = input(
+            f"Mensagem para {nome.capitalize()} (enter = padrão):\nR: "
+        ).strip()
+        mensagens_por_pessoa[nome] = personalizada or msg_padrao
+
+    enviar_msgs_personalizadas(mensagens_por_pessoa)
 
 
 if __name__ == "__main__":
