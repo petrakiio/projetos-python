@@ -19,5 +19,8 @@ def search(arq):
         else:
             print(f"\nPasta não encontrada: {caminho}")
 
-
-search('fundo.jpg')
+def Main():
+    print('='*30)
+    print('1-Buscar Arquivos')
+    print('2-fechar')
+    print('='*30)
