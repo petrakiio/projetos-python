@@ -16,11 +16,23 @@ def search(arq):
             if arq in arquivos:
                 print(f'Arquivo encontrado em:[{caminho}/{arq}]')
                 break
+            else:
+                print('Arquivo não encontrado')
         else:
             print(f"\nPasta não encontrada: {caminho}")
 
 def Main():
-    print('='*30)
-    print('1-Buscar Arquivos')
-    print('2-fechar')
-    print('='*30)
+    while True:
+        print('='*30)
+        print('1-Buscar Arquivos')
+        print('2-fechar')
+        print('='*30,'\n')
+        opn = int(input('R:'))
+        if opn == 1:
+            arquivo = input('Me diga o nome do arquivo(coloque a extensão dele):')
+            search(arquivo)
+        else:
+            print('Fechando')
+            break
+
+Main()
