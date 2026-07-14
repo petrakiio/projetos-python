@@ -44,5 +44,22 @@ class DatabaseService:
 
             return True
         except Exception as err:
+            
+            print(f'Error:{err}')
+            return None
+        
+    def QueryPath(self):
+        db = None
+
+        try:
+
+            db = self.getConnection()
+            cursor = db.cursor()
+            sql = 'SELECT path FROM Path'
+            cursor.execute(sql)
+            return cursor.fetchall()
+        
+        except Exception as err:
+
             print(f'Error:{err}')
             return None

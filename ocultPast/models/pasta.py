@@ -8,4 +8,10 @@ class pasta:
     
     def criptografar(self):
         self.ph.hash(self.password)
-        self.ph.hash(self.path)
+    
+    staticmethod
+    def verific(self,password,hash):
+        if self.ph.verify(hash,password):
+            return True
+        else:
+            return False
