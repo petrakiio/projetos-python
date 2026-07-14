@@ -1,4 +1,8 @@
 import questionary
+from models.db 
+
+def visualizarPast():
+    
 
 def menu():
 
@@ -14,10 +18,10 @@ def menu():
         ).ask()
 
 
-        if opcao == "Password":
-            pass
+        if opcao == "Acessar Past":
+            
 
-        elif opcao == "Validar rosto":
+        elif opcao == "Cadastrar Past":
             pass
 
         elif opcao == "Sair":
