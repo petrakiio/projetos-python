@@ -5,20 +5,20 @@ def menu():
     while True:
 
         opcao = questionary.select(
-            "Cadastrar",
+            "Menu",
             choices=[
-                "Password",
-                "Path",
+                "Acessar Past"
+                "Cadastrar Past",
                 "Sair"
             ]
         ).ask()
 
 
-        if opcao == "Cadastrar rosto":
-            cadastrar_rosto()
+        if opcao == "Password":
+            pass
 
         elif opcao == "Validar rosto":
-            validar_rosto()
+            pass
 
         elif opcao == "Sair":
             break
