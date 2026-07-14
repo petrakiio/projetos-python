@@ -1,0 +1,4 @@
+class ServiceCadastro:
+
+    def cadastrar():
+        

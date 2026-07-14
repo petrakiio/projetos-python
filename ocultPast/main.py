@@ -1,14 +1,14 @@
-from core.faces import questionary,cadastrar_rosto,validar_rosto
+import questionary
 
 def menu():
 
     while True:
 
         opcao = questionary.select(
-            "Sistema facial",
+            "Cadastrar",
             choices=[
-                "Cadastrar rosto",
-                "Validar rosto",
+                "Password",
+                "Path",
                 "Sair"
             ]
         ).ask()
