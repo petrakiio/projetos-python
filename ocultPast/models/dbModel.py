@@ -99,7 +99,7 @@ class DatabaseService:
             if db is not None:
                 db.close()
     
-    def OneQuery(self,path):
+    def getHash(self,path):
         db = None
 
         try:
@@ -145,11 +145,60 @@ class DatabaseService:
 
             cursor.execute(sql,value)
 
-            return cursor.fetchall()
+            return int(cursor.fetchall())
         
         except Exception as err:
             print(f'Error:{err}')
-            
+            return None
 
-    def saveKey(self,key,path_id):
-        pass
+        finally:
+            if cursor is not None:
+                cursor.close()
+
+            if db is not None:
+                db.close()
+
+    def saveKey(self,path_id,key):
+        db = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return None
+            
+            cursor = db.cursor()
+
+            sql = 'INSERT INTO Pathkeys(path_id,encrypted_key) VALUES (%s,%s)'
+            values = (
+                path_id,
+                key
+            )
+
+            cursor.execute(sql,values)
+            db.commit()
+
+            return True
+
+        except Exception as err:
+            print(f'Error:{err}')
+            return None
+        
+        finally:
+            if cursor is not None:
+                cursor.close()
+
+            if db is not None:
+                db.close()
+    
+    def getKey(self,path_id):
+        db = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return None
+            
+            cursor = db.cursor()
+            sql = 'SELECT encrypted_key FROM '

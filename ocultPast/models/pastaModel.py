@@ -3,15 +3,6 @@ from cryptography.fernet import Fernet
 from models.dbModel import DatabaseService
 import os
 
-fernet = Fernet(key)
-
-with open("teste.txt", "rb") as f:
-    dados = f.read()
-
-dados_criptografados = fernet.encrypt(dados)
-
-with open("teste.txt", "wb") as f:
-    f.write(dados_criptografados)
 
 
 class Pasta:
@@ -29,5 +20,45 @@ class Pasta:
         ph = PasswordHasher()
         return ph.verify(hash, password)
 
-    def criptografarPasta(self,path):
-        
+    def criptografarPasta(self):
+        id_path = self.db.getId(self.path)
+
+        key = Fernet.generate_key()
+        fernet = Fernet(key)
+
+        # Save in database
+        self.db.saveKey(id_path, key)
+
+        for root, dirs, files in os.walk(self.path):
+
+            for file in files:
+
+                file_path = os.path.join(root, file)
+
+                with open(file_path, "rb") as f:
+                    data = f.read()
+
+                encrypted = fernet.encrypt(data)
+
+                with open(file_path, "wb") as f:
+                    f.write(encrypted)
+
+    def descriptografarPasta(self):
+        id_path = self.db.getId(self.path)
+
+        key = self.db.getKey(id_path)
+        fernet = Fernet(key)
+
+        for root, dirs, files in os.walk(self.path):
+
+            for file in files:
+
+                file_path = os.path.join(root, file)
+
+                with open(file_path, "rb") as f:
+                    data = f.read()
+
+                decrypted = fernet.decrypt(data)
+
+                with open(file_path, "wb") as f:
+                    f.write(decrypted)
