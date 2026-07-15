@@ -33,7 +33,6 @@ class DatabaseService:
         cursor = None
 
         try:
-            # Gera e salva o hash da senha
             pathModel.password = pathModel.criptografar()
 
             db = self.getConnection()

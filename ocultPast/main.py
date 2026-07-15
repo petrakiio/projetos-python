@@ -6,13 +6,21 @@ def quebralinha():
     print()
 
 def MenuPaths():
-    paths = PastService.query()
-    if paths is not None:
-        opn = questionary.select(
-            "Escolha a pasta",
-            choices=[paths]
-        )
-        
+    service = PastService()
+    paths = service.query()
+
+    if paths is None:
+        print("Nenhuma pasta encontrada.")
+        return None
+
+    choices = [path[0] for path in paths]
+
+    opn = questionary.select(
+        "Escolha a pasta",
+        choices=choices
+    ).ask()
+
+    return opn
 
 def menu():
 
