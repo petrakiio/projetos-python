@@ -98,3 +98,32 @@ class DatabaseService:
 
             if db is not None:
                 db.close()
+    
+    def OneQuery(self,path):
+        db = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return None
+            
+            cursor = db.cursor()
+
+            sql = 'SELECT password FROM Path WHERE path = %s'
+            value = path
+
+            cursor.execute(sql,value)
+
+            return cursor.fetchall()
+        
+        except Exception as err:
+            print(f'Erro:{err}')
+            return None
+        
+        finally:
+            if cursor is not None:
+                cursor.close()
+
+            if db is not None:
+                db.close()

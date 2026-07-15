@@ -5,6 +5,13 @@ from controller.pastaController import PastService
 def quebralinha():
     print()
 
+def acessar(path):
+    service = PastService()
+
+    senha = input('Diga sua senha:')
+    acess = service.Validate(path,senha)
+
+
 def MenuPaths():
     service = PastService()
     paths = service.query()
@@ -30,6 +37,7 @@ def menu():
             "Menu",
             choices=[
                 "Acessar Past",
+                "Reecriptografar Past",
                 "Cadastrar Past",
                 "Sair"
             ]
@@ -41,6 +49,9 @@ def menu():
 
 
         elif opcao == "Cadastrar Past":
+            pass
+
+        elif opcao == "Reecriptografar Past":
             pass
 
         elif opcao == "Sair":
