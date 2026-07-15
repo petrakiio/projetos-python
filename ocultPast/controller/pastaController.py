@@ -11,3 +11,4 @@ class PastService:
 
     def Validate(self,path,senha):
         hash = self.db.OneQuery(path)
+        IsMath = self.past.verificar(senha,hash)

@@ -127,3 +127,29 @@ class DatabaseService:
 
             if db is not None:
                 db.close()
+
+    def getId(self,path):
+
+        db = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return None
+            
+            cursor = db.cursor()
+
+            sql = 'SELECT id FROM Path WHERE path = %s'
+            value = path
+
+            cursor.execute(sql,value)
+
+            return cursor.fetchall()
+        
+        except Exception as err:
+            print(f'Error:{err}')
+            
+
+    def saveKey(self,key,path_id):
+        pass
