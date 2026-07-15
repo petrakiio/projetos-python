@@ -1,6 +1,6 @@
 import questionary
 import os
-from controller.past import PastService
+from controller.pastaController import PastService
 
 def quebralinha():
     print()

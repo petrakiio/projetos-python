@@ -1,4 +1,4 @@
-from models.db import DatabaseService
+from models.dbModel import DatabaseService
 
 class PastService:
 
