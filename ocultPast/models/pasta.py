@@ -1,17 +1,16 @@
 from argon2 import PasswordHasher
 
-class pasta:
-    def __init__(self,path,password):
+
+class Pasta:
+    def __init__(self, path, password):
         self.path = path
         self.password = password
         self.ph = PasswordHasher()
-    
+
     def criptografar(self):
-        self.ph.hash(self.password)
-    
-    staticmethod
-    def verific(self,password,hash):
-        if self.ph.verify(hash,password):
-            return True
-        else:
-            return False
+        return self.ph.hash(self.password)
+
+    @staticmethod
+    def verificar(password, hash):
+        ph = PasswordHasher()
+        return ph.verify(hash, password)

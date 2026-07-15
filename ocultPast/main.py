@@ -1,8 +1,18 @@
 import questionary
-from models.db 
+import os
+from controller.past import PastService
 
-def visualizarPast():
-    
+def quebralinha():
+    print()
+
+def MenuPaths():
+    paths = PastService.query()
+    if paths is not None:
+        opn = questionary.select(
+            "Escolha a pasta",
+            choices=[paths]
+        )
+        
 
 def menu():
 
@@ -11,7 +21,7 @@ def menu():
         opcao = questionary.select(
             "Menu",
             choices=[
-                "Acessar Past"
+                "Acessar Past",
                 "Cadastrar Past",
                 "Sair"
             ]
@@ -19,7 +29,8 @@ def menu():
 
 
         if opcao == "Acessar Past":
-            
+            path = MenuPaths()
+
 
         elif opcao == "Cadastrar Past":
             pass

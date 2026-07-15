@@ -27,7 +27,7 @@ class DatabaseService:
             return None
     
     def InsertPath(self,pathModel):
-        pathModel.criptografar()
+        pathModel.password = pathModel.criptografar()
         db = None
 
         try:
@@ -39,15 +39,17 @@ class DatabaseService:
             cursor.execute(sql,values)
 
             db.commit()
-            db.close()
-            cursor.close()
 
             return True
         except Exception as err:
-            
+
             print(f'Error:{err}')
             return None
         
+        finally:
+            db.close()
+            cursor.close()
+
     def QueryPath(self):
         db = None
 
@@ -63,3 +65,7 @@ class DatabaseService:
 
             print(f'Error:{err}')
             return None
+
+        finally:
+            db.close()
+            cursor.close()
