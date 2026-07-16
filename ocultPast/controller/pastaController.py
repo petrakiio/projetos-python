@@ -5,12 +5,9 @@ class PastService:
     def __init__(self):
         self.db = DatabaseService()
         self.past = Pasta()
-
-    def queryOnlocked(self):
-        return self.db.QueryPath()
     
-    def queryLocked(self):
-        
+    def queryLocked(self,value):
+        return self.db.QueryPath(value)
 
     def AcessPast(self,path,senha):
         hash = self.db.getHash(path)

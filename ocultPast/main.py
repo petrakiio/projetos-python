@@ -17,9 +17,9 @@ def acessar(path):
     print('Acesso bloqueado,senha incorreta!')
 
 
-def MenuPaths():
+def MenuPaths(value):
     service = PastService()
-    paths = service.query()
+    paths = service.queryLocked(value)
 
     if paths is None:
         print("Nenhuma pasta encontrada.")
@@ -50,7 +50,7 @@ def menu():
 
 
         if opcao == "Acessar Past":
-            path = MenuPaths()
+            path = MenuPaths(0) # bloqueada
             acessar(path)
 
 
@@ -58,7 +58,7 @@ def menu():
             pass
 
         elif opcao == "Reecriptografar Past":
-            pass
+            path = MenuPaths(1) #Desbloqueada 
 
         elif opcao == "Sair":
             break

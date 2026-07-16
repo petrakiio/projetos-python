@@ -22,11 +22,13 @@ class DatabaseService:
                 password=self.password,
                 database=self.database
             )
+
             return connection
 
         except Exception as err:
             print(f"Erro ao conectar ao banco: {err}")
             return None
+
 
     def InsertPath(self, pathModel):
         db = None
@@ -62,13 +64,14 @@ class DatabaseService:
             return False
 
         finally:
-            if cursor is not None:
+            if cursor:
                 cursor.close()
 
-            if db is not None:
+            if db:
                 db.close()
 
-    def QueryOnlocked(self):
+
+    def QueryPath(self, value):
         db = None
         cursor = None
 
@@ -80,142 +83,180 @@ class DatabaseService:
 
             cursor = db.cursor()
 
-            sql = "SELECT path FROM Path WHERE unlocked = 1"
+            sql = """
+                SELECT path 
+                FROM Path 
+                WHERE unlocked = %s
+            """
 
-            cursor.execute(sql)
+            cursor.execute(sql, (value,))
 
-            resultado = cursor.fetchall()
-
-            return resultado
+            return cursor.fetchall()
 
         except Exception as err:
             print(f"Erro: {err}")
             return None
 
         finally:
-            if cursor is not None:
+            if cursor:
                 cursor.close()
 
-            if db is not None:
+            if db:
                 db.close()
-    
-    def getHash(self,path):
+
+
+    def getHash(self, path):
         db = None
+        cursor = None
 
         try:
             db = self.getConnection()
 
             if db is None:
                 return None
-            
+
             cursor = db.cursor()
 
-            sql = 'SELECT password FROM Path WHERE path = %s'
-            value = path
+            sql = """
+                SELECT password 
+                FROM Path 
+                WHERE path = %s
+            """
 
-            cursor.execute(sql,value)
+            cursor.execute(sql, (path,))
 
-            return cursor.fetchall()
-        
-        except Exception as err:
-            print(f'Erro:{err}')
+            resultado = cursor.fetchone()
+
+            if resultado:
+                return resultado[0]
+
             return None
-        
-        finally:
-            if cursor is not None:
-                cursor.close()
 
-            if db is not None:
-                db.close()
-
-    def getId(self,path):
-
-        db = None
-
-        try:
-            db = self.getConnection()
-
-            if db is None:
-                return None
-            
-            cursor = db.cursor()
-
-            sql = 'SELECT id FROM Path WHERE path = %s'
-            value = path
-
-            cursor.execute(sql,value)
-
-            return int(cursor.fetchall())
-        
         except Exception as err:
-            print(f'Error:{err}')
+            print(f"Erro: {err}")
             return None
 
         finally:
-            if cursor is not None:
+            if cursor:
                 cursor.close()
 
-            if db is not None:
+            if db:
                 db.close()
 
-    def saveKey(self,path_id,key):
+
+    def getId(self, path):
         db = None
+        cursor = None
 
         try:
             db = self.getConnection()
 
             if db is None:
                 return None
-            
+
             cursor = db.cursor()
 
-            sql = 'INSERT INTO Pathkeys(path_id,encrypted_key) VALUES (%s,%s)'
+            sql = """
+                SELECT id 
+                FROM Path 
+                WHERE path = %s
+            """
+
+            cursor.execute(sql, (path,))
+
+            resultado = cursor.fetchone()
+
+            if resultado:
+                return resultado[0]
+
+            return None
+
+        except Exception as err:
+            print(f"Erro: {err}")
+            return None
+
+        finally:
+            if cursor:
+                cursor.close()
+
+            if db:
+                db.close()
+
+
+    def saveKey(self, path_id, key):
+        db = None
+        cursor = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return False
+
+            cursor = db.cursor()
+
+            sql = """
+                INSERT INTO PathKeys(path_id, encrypted_key)
+                VALUES (%s, %s)
+            """
+
             values = (
                 path_id,
                 key
             )
 
-            cursor.execute(sql,values)
+            cursor.execute(sql, values)
+
             db.commit()
 
             return True
 
         except Exception as err:
-            print(f'Error:{err}')
-            return None
-        
+            print(f"Erro: {err}")
+            return False
+
         finally:
-            if cursor is not None:
+            if cursor:
                 cursor.close()
 
-            if db is not None:
+            if db:
                 db.close()
-    
-    def getKey(self,path_id):
+
+
+    def getKey(self, path_id):
         db = None
+        cursor = None
 
         try:
             db = self.getConnection()
 
             if db is None:
                 return None
-            
+
             cursor = db.cursor()
 
-            sql = 'SELECT encrypted_key FROM PathKeys WHERE path_id = %s'
-            value = path_id
+            sql = """
+                SELECT encrypted_key 
+                FROM PathKeys 
+                WHERE path_id = %s
+            """
 
-            cursor.execute(sql,value)
-            
-            return cursor.fetchall()
-        
-        except Exception as err:
-            print(f'Error:{err}')
+            cursor.execute(sql, (path_id,))
+
+            resultado = cursor.fetchone()
+
+            if resultado:
+                return resultado[0]
+
             return None
-        
+
+        except Exception as err:
+            print(f"Erro: {err}")
+            return None
+
         finally:
-            if db is not None:
-                db.close()
-            
-            if cursor is not None:
+            if cursor:
                 cursor.close()
+
+            if db:
+                db.close()
