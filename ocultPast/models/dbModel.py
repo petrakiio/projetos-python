@@ -201,4 +201,21 @@ class DatabaseService:
                 return None
             
             cursor = db.cursor()
-            sql = 'SELECT encrypted_key FROM '
+
+            sql = 'SELECT encrypted_key FROM PathKeys WHERE path_id = %s'
+            value = path_id
+
+            cursor.execute(sql,value)
+            
+            return cursor.fetchall()
+        
+        except Exception as err:
+            print(f'Error:{err}')
+            return None
+        
+        finally:
+            if db is not None:
+                db.close()
+            
+            if cursor is not None:
+                cursor.close()
