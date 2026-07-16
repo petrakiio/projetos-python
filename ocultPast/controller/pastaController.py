@@ -6,9 +6,18 @@ class PastService:
         self.db = DatabaseService()
         self.past = Pasta()
 
-    def query(self):
+    def queryOnlocked(self):
         return self.db.QueryPath()
+    
+    def queryLocked(self):
+        
 
-    def Validate(self,path,senha):
-        hash = self.db.OneQuery(path)
+    def AcessPast(self,path,senha):
+        hash = self.db.getHash(path)
         IsMath = self.past.verificar(senha,hash)
+
+        if IsMath:
+            self.past.descriptografarPasta(path)
+            return True
+        else:
+            return None

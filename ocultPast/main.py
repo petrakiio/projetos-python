@@ -9,7 +9,12 @@ def acessar(path):
     service = PastService()
 
     senha = input('Diga sua senha:')
-    acess = service.Validate(path,senha)
+    acess = service.AcessPast(path,senha)
+
+    if acess:
+        print('Pasta desbloqueada')
+    
+    print('Acesso bloqueado,senha incorreta!')
 
 
 def MenuPaths():
@@ -46,6 +51,7 @@ def menu():
 
         if opcao == "Acessar Past":
             path = MenuPaths()
+            acessar(path)
 
 
         elif opcao == "Cadastrar Past":

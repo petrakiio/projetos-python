@@ -68,7 +68,7 @@ class DatabaseService:
             if db is not None:
                 db.close()
 
-    def QueryPath(self):
+    def QueryOnlocked(self):
         db = None
         cursor = None
 
@@ -80,7 +80,7 @@ class DatabaseService:
 
             cursor = db.cursor()
 
-            sql = "SELECT path FROM Path"
+            sql = "SELECT path FROM Path WHERE unlocked = 1"
 
             cursor.execute(sql)
 

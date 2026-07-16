@@ -6,22 +6,19 @@ import os
 
 
 class Pasta:
-    def __init__(self, path, password):
-        self.path = path
-        self.password = password
+    def __init__(self):
         self.ph = PasswordHasher()
         self.db = DatabaseService()
 
     def criptografar(self):
         return self.ph.hash(self.password)
 
-    @staticmethod
     def verificar(password, hash):
         ph = PasswordHasher()
         return ph.verify(hash, password)
 
-    def criptografarPasta(self):
-        id_path = self.db.getId(self.path)
+    def criptografarPasta(self,path):
+        id_path = self.db.getId(path)
 
         key = Fernet.generate_key()
         fernet = Fernet(key)
@@ -29,7 +26,7 @@ class Pasta:
         # Save in database
         self.db.saveKey(id_path, key)
 
-        for root, dirs, files in os.walk(self.path):
+        for root, dirs, files in os.walk(path):
 
             for file in files:
 
@@ -43,8 +40,8 @@ class Pasta:
                 with open(file_path, "wb") as f:
                     f.write(encrypted)
 
-    def descriptografarPasta(self):
-        id_path = self.db.getId(self.path)
+    def descriptografarPasta(self,path):
+        id_path = self.db.getId(path)
 
         key = self.db.getKey(id_path)
         fernet = Fernet(key)
