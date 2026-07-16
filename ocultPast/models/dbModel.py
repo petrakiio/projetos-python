@@ -30,12 +30,12 @@ class DatabaseService:
             return None
 
 
-    def InsertPath(self, pathModel):
+    def InsertPath(self, path,hash):
         db = None
         cursor = None
 
         try:
-            pathModel.password = pathModel.criptografar()
+            
 
             db = self.getConnection()
 
@@ -50,8 +50,8 @@ class DatabaseService:
             """
 
             values = (
-                pathModel.path,
-                pathModel.password
+                path,
+                hash
             )
 
             cursor.execute(sql, values)
@@ -253,6 +253,46 @@ class DatabaseService:
         except Exception as err:
             print(f"Erro: {err}")
             return None
+
+        finally:
+            if cursor:
+                cursor.close()
+
+            if db:
+                db.close()
+    
+    def updateAcess(self,path_id,status):
+        db = None
+        cursor = None
+
+        try:
+            db = self.getConnection()
+
+            if db is None:
+                return False
+
+            cursor = db.cursor()
+
+            sql = """
+                UPDATE Path
+                SET unlocked = %s
+                WHERE id = %s
+            """
+
+            values = (
+                status,
+                path_id
+            )
+
+            cursor.execute(sql, values)
+
+            db.commit()
+
+            return True
+
+        except Exception as err:
+            print(f"Erro: {err}")
+            return False
 
         finally:
             if cursor:

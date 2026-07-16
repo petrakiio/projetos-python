@@ -1,27 +1,35 @@
 import questionary
-import os
 from controller.pastaController import PastService
+
 
 def quebralinha():
     print()
 
+
 def acessar(path):
+    if path is None:
+        return
+
     service = PastService()
 
-    senha = input('Diga sua senha:')
-    acess = service.AcessPast(path,senha)
+    senha = input('Diga sua senha: ')
+
+    acess = service.AcessPast(path, senha)
 
     if acess:
         print('Pasta desbloqueada')
-    
-    print('Acesso bloqueado,senha incorreta!')
+    else:
+        print('Acesso bloqueado, senha incorreta!')
 
+def criptografar(path):
+    pass
 
 def MenuPaths(value):
     service = PastService()
+
     paths = service.queryLocked(value)
 
-    if paths is None:
+    if not paths:
         print("Nenhuma pasta encontrada.")
         return None
 
@@ -33,6 +41,7 @@ def MenuPaths(value):
     ).ask()
 
     return opn
+
 
 def menu():
 
@@ -50,15 +59,23 @@ def menu():
 
 
         if opcao == "Acessar Past":
-            path = MenuPaths(0) # bloqueada
+
+            path = MenuPaths(0)  # bloqueadas
+
             acessar(path)
+
+
+        elif opcao == "Reecriptografar Past":
+
+            path = MenuPaths(1)  # desbloqueadas
+
+            if path:
+                print(f"Selecionado: {path}")
 
 
         elif opcao == "Cadastrar Past":
             pass
 
-        elif opcao == "Reecriptografar Past":
-            path = MenuPaths(1) #Desbloqueada 
 
         elif opcao == "Sair":
             break
