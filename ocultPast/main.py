@@ -18,12 +18,23 @@ def acessar(path):
 
     if acess:
         print('Pasta desbloqueada')
+        quebralinha()
     else:
         print('Acesso bloqueado, senha incorreta!')
+        quebralinha()
 
 def criptografar(path):
-    pass
+    senha = input('Diga sua senha:')
+    service = PastService()
 
+    insert = service.cadastrarPath(path,senha)
+    if insert:
+        print('Pasta adicionada e criptografada')
+        quebralinha()
+    else:
+        print('Erro ao criptografar')
+        quebralinha()
+ 
 def MenuPaths(value):
     service = PastService()
 
@@ -74,7 +85,9 @@ def menu():
 
 
         elif opcao == "Cadastrar Past":
-            pass
+            path = input('Coloque seu diretorio:')
+            criptografar(path)
+
 
 
         elif opcao == "Sair":

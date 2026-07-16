@@ -9,6 +9,15 @@ class PastService:
     def queryLocked(self,value):
         return self.db.QueryPath(value)
 
+    def cadastrarPath(self,path,password):
+        hash = self.past.criptografar(password)
+        insert = self.db.InsertPath(path,hash)
+
+        if insert:
+            return self.past.criptografarPasta(path)
+        else:
+            return None
+
     def AcessPast(self,path,senha):
         hash = self.db.getHash(path)
         IsMath = self.past.verificar(senha,hash)
