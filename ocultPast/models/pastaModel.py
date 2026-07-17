@@ -104,7 +104,7 @@ class Pasta:
                     with open(file_path, "wb") as f:
                         f.write(decrypted)
 
-
+            # debloqueia a pasta
             self.db.updateAcess(id_path, True)
 
             return True
