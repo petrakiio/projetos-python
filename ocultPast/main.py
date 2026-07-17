@@ -82,6 +82,7 @@ def menu():
 
             if path:
                 print(f"Selecionado: {path}")
+                criptografar(path)
 
 
         elif opcao == "Cadastrar Past":
